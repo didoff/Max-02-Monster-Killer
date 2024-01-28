@@ -11,17 +11,29 @@ const LOG_EVENT_MONSTER_ATTACK = "MONSTER_ATTACK";
 const LOG_EVENT_PLAYER_HEAL = "PLAYER_HEAL";
 const LOG_EVENT_GAME_OVER = "GAME_OVER";
 
-const enteredValue = prompt("Maximum life for you and the monster.", "100");
-
 // Ask for the prompt until a valid number is provided ** enteredValue needs to 'let'
 // while (isNaN(parseInt(enteredValue))) {
 //     enteredValue = prompt('Maximum life for you and the monster.', '100');
 // }
-
-let chosenMaxLife = parseInt(enteredValue);
 let battleLog = [];
 
-if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
+function getMaxLifeValues() {
+  const enteredValue = prompt("Maximum life for you and the monster.", "100");
+  const parsedValue = parseInt(enteredValue);
+
+  if (isNaN(parsedValue) || parsedValue <= 0) {
+    throw { message: "Invalid user input. No a number!" };
+  } 
+
+  return parsedValue;
+}
+
+let chosenMaxLife;
+
+try {
+  chosenMaxLife = getMaxLifeValues();
+} catch (error) {
+  console.log(error);
   chosenMaxLife = 100;
 }
 
@@ -137,9 +149,10 @@ function endRound() {
 }
 
 function attackMonster(attackMode) {
-  const maxDamage = attackMode === MODE_ATTACK ? ATTACK_VALUE : STRONG_ATTACK_VALUE;
+  const maxDamage =
+    attackMode === MODE_ATTACK ? ATTACK_VALUE : STRONG_ATTACK_VALUE;
   const logEvent =
-  attackMode === MODE_ATTACK
+    attackMode === MODE_ATTACK
       ? LOG_EVENT_PLAYER_ATTACK
       : LOG_EVENT_PLAYER_STRONG_ATTACK;
   // Replaced by ternary operator above
@@ -189,7 +202,7 @@ function printLogHandler() {
   for (let i = 0; i < battleLog.length; i++) {
     console.log(`#${i}`);
     for (const key in battleLog[i]) {
-        console.log(`${key} ==> ${battleLog[i][key]}`);
+      console.log(`${key} ==> ${battleLog[i][key]}`);
     }
   }
 }
